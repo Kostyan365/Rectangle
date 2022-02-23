@@ -1,19 +1,31 @@
 import sys
 import random
-from PyQt5 import uic
-from PyQt5.QtWidgets import QWidget, QApplication
-from PyQt5.QtGui import QPainter, QBrush
-from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QWidget, QApplication, QPushButton, QMainWindow
+from PyQt5.QtGui import QPainter, QBrush, QColor
+from PyQt5.QtCore import Qt, QRect
 
 
-class Example(QWidget):
+class Ui_Form(object):
+    def __init__(self):
+        self.centralWidget = None
+        self.pushButton = None
+
+    def setupUi(self, MainWindow):
+        MainWindow.setObjectName("MainWindow")
+        MainWindow.resize(443, 391)
+        self.centralWidget = QWidget(MainWindow)
+        self.pushButton = QPushButton(self.centralWidget)
+        self.pushButton.setGeometry(QRect(190, 360, 75, 23))
+        self.pushButton.setText('старт')
+        MainWindow.setCentralWidget(self.centralWidget)
+
+
+class Example(QMainWindow, Ui_Form):
     def __init__(self):
         super().__init__()
-        uic.loadUi('01.ui', self)  # Загружаем дизайн
-        self.setWindowTitle('Git и желтые окружности')
+        self.setupUi(self)
         self.do_paint = False
         self.width, self.height = self.size().width(), self.size().height()
-
         self.pushButton.clicked.connect(self.paint)
 
     def paintEvent(self, event):
@@ -28,10 +40,14 @@ class Example(QWidget):
         self.repaint()
 
     def draw_flag(self, qp):
-        qp.setBrush(QBrush(Qt.yellow, Qt.SolidPattern))
+        r = random.randrange(0, 255)
+        g = random.randrange(0, 255)
+        b = random.randrange(0, 255)
         x1 = random.randrange(0, self.width)
         y2 = random.randrange(0, self.height)
         z = random.randrange(5, 100)
+        color = QColor(r, g, b)
+        qp.setBrush(QBrush(color, Qt.SolidPattern))
         qp.drawEllipse(x1, y2, z, z)
 
 
